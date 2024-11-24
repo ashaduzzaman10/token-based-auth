@@ -1,4 +1,5 @@
 require("dotenv").config()
+require("./config/passport/passport")
 const express = require( "express" );
 const cors = require("cors");
 const morgan = require("morgan");
@@ -6,7 +7,6 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const userModel = require( "./models/userModel" );
 const passport = require( "passport" );
-const {}= require("./")
 
 const app = express();
 
@@ -63,12 +63,7 @@ app.post("/register", async (req, res) => {
 		});
 	}
 });
-// profile route
-app.get("/profile", (req, res) => {
-	res.status(200).json({
-		data: "success",
-	});
-});
+
 
 app.get("/login", async (req, res) => {
 	try {
@@ -113,6 +108,29 @@ app.get("/login", async (req, res) => {
 
 });
 
+// profile route
+app.get(
+    "/profile",
+    passport.authenticate("jwt", { session: false }),
+    function (req, res) {
+        try {
+            return res.status(200).json({
+                success: true,
+                message: "user login successfully",
+                user: {
+                    id: req.user._id,
+                    userName: req.user.userName
+                }
+            });
+        } catch (error) {
+            console.error("Error in /profile route:", error);
+            return res.status(500).json({
+                success: false,
+                message: "Internal server error"
+            });
+        }
+    }
+);
 // health route
 app.get("/health", (req, res) => {
 	res.status(200).json({
