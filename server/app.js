@@ -4,7 +4,9 @@ const cors = require("cors");
 const morgan = require("morgan");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const userModel = require("./server/models/userModel");
+const userModel = require( "./models/userModel" );
+const passport = require( "passport" );
+const {}= require("./")
 
 const app = express();
 
@@ -12,7 +14,8 @@ app.use([
 	cors(),
 	morgan("dev"),
 	express.json(),
-	express.urlencoded({ extended: true }),
+	express.urlencoded( { extended: true } ),
+	passport.initialize(),
 ]);
 
 // register route
